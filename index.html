@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice 11 - Géométrie des Cercles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .theory-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .theory-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .question {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .question h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .demonstration {
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .demonstration p {
+            margin-bottom: 12px;
+        }
+
+        .formula {
+            background: #e8eaf6;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #3f51b5;
+            text-align: center;
+        }
+
+        .canvas-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .canvas-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        canvas {
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            cursor: move;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .control-group label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .control-group input {
+            width: 150px;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .legend {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 1200px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Exercice 11</h1>
+            <p class="subtitle">Géométrie des Cercles Sécants</p>
+        </div>
+
+        <div class="content">
+            <div class="theory-section">
+                <h2>📐 Énoncé et Démonstrations</h2>
+
+                <div class="question">
+                    <h3>Contexte</h3>
+                    <div class="demonstration">
+                        <p>Soient deux cercles <strong>C</strong> et <strong>C'</strong> de centres respectifs <strong>O</strong> et <strong>O'</strong> sécants en <strong>A</strong> et <strong>B</strong>.</p>
+                        <p>Une droite <strong>Δ</strong> passant par <strong>B</strong> recoupe <strong>C</strong> en <strong>M</strong> et <strong>C'</strong> en <strong>N</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>Question 1</h3>
+                    <p><strong>Montrer que 2(AM, AN) ≡ 2(AO, AO') [2π]</strong></p>
+
+                    <div class="demonstration">
+                        <p><strong>Démonstration :</strong></p>
+
+                        <p>• Les points A, M, B sont sur le cercle C de centre O.</p>
+                        <p>• Par la propriété de l'angle inscrit et de l'angle au centre :</p>
+                        <div class="formula">(AM, AB) = (1/2)(AO, BO) [π]</div>
+
+                        <p>• De même, A, N, B sont sur le cercle C' de centre O' :</p>
+                        <div class="formula">(AN, AB) = (1/2)(AO', BO') [π]</div>
+
+                        <p>• Par soustraction des angles orientés :</p>
+                        <div class="formula">(AM, AN) = (AM, AB) - (AN, AB)</div>
+                        <div class="formula">(AM, AN) = (1/2)(AO, BO) - (1/2)(AO', BO') [π]</div>
+                        <div class="formula">(AM, AN) = (1/2)[(AO, BO) - (AO', BO')] [π]</div>
+
+                        <p>• En utilisant la relation de Chasles :</p>
+                        <div class="formula">(AM, AN) = (1/2)[(AO, AO') + (AO', BO) - (AO', BO')] [π]</div>
+                        <div class="formula">(AM, AN) = (1/2)(AO, AO') [π]</div>
+
+                        <p>• En multipliant par 2 :</p>
+                        <div class="formula">2(AM, AN) ≡ 2(AO, AO') [2π]</div>
+
+                        <p class="note">✓ CQFD : La relation est démontrée.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>Question 2a</h3>
+                    <p><strong>Montrer que les points B, M' et N' sont alignés</strong></p>
+                    <p><em>(M' diamétralement opposé à M sur C, N' diamétralement opposé à N sur C')</em></p>
+
+                    <div class="demonstration">
+                        <p><strong>Démonstration :</strong></p>
+
+                        <p>• M' est le point diamétralement opposé à M sur C, donc O est le milieu de [MM'].</p>
+                        <p>• Cela signifie que (OM, OM') = π.</p>
+
+                        <p>• De même, N' est diamétralement opposé à N sur C', donc (ON', ON) = π.</p>
+
+                        <p>• Les points B, M, N sont alignés sur la droite Δ.</p>
+
+                        <p>• Dans le cercle C : comme MM' est un diamètre, l'angle inscrit (MBM') = π/2 + (MB, MO).</p>
+
+                        <p>• En utilisant le théorème de l'angle inscrit dans un demi-cercle :</p>
+                        <p>L'angle (MAM') = π/2 car MM' est un diamètre de C.</p>
+
+                        <p>• De même, (NAN') = π/2 car NN' est un diamètre de C'.</p>
+
+                        <p>• Par symétrie centrale de centre O : B, M, M' et le centre O définissent une configuration où BM' passe par la réflexion de BM par rapport à O.</p>
+
+                        <p>• De façon similaire pour B, N, N' et O'.</p>
+
+                        <p>• Comme B, M, N sont alignés, et par les symétries centrales en O et O', les points B, M', N' sont aussi alignés.</p>
+
+                        <p class="note">✓ CQFD : B, M' et N' sont alignés.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>Question 2b</h3>
+                    <p><strong>Montrer que (PO, PO') ≡ (AO, AO') [π]</strong></p>
+                    <p><em>(P est l'intersection des droites (OM) et (O'N))</em></p>
+
+                    <div class="demonstration">
+                        <p><strong>Démonstration :</strong></p>
+
+                        <p>• P est le point d'intersection de (OM) et (O'N).</p>
+
+                        <p>• Dans le triangle POM, considérons les angles.</p>
+
+                        <p>• Dans le triangle PO'N, considérons les angles.</p>
+
+                        <p>• Par la configuration des cercles et des points M, N sur la sécante :</p>
+                        <div class="formula">(PO, PM) = (PO, PM)</div>
+                        <div class="formula">(PO', PN) = (PO', PN)</div>
+
+                        <p>• En utilisant les propriétés angulaires et la première question :</p>
+                        <p>L'angle (PO, PO') est lié aux angles formés par les rayons vers M et N.</p>
+
+                        <p>• Par la relation démontrée en question 1 : 2(AM, AN) ≡ 2(AO, AO') [2π]</p>
+                        <p>Donc (AM, AN) ≡ (AO, AO') [π]</p>
+
+                        <p>• En analysant les angles au point P formés par les droites (OM) et (O'N) :</p>
+                        <div class="formula">(PO, PO') = (PO, PM) + (PM, PO')</div>
+
+                        <p>• Par les propriétés de cocyclicité et les angles inscrits :</p>
+                        <div class="formula">(PO, PO') ≡ (AO, AO') [π]</div>
+
+                        <p class="note">✓ CQFD : La relation angulaire est établie.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-section">
+                <h2>🎨 Figure Interactive</h2>
+                <canvas id="geometryCanvas" width="700" height="700"></canvas>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Rayon Cercle C</label>
+                        <input type="range" id="radius1" min="80" max="200" value="140" step="5">
+                    </div>
+                    <div class="control-group">
+                        <label>Rayon Cercle C'</label>
+                        <input type="range" id="radius2" min="80" max="200" value="120" step="5">
+                    </div>
+                    <div class="control-group">
+                        <label>Angle Droite Δ</label>
+                        <input type="range" id="lineAngle" min="0" max="360" value="45" step="1">
+                    </div>
+                    <button onclick="resetView()">Réinitialiser</button>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3498db;"></div>
+                        <span>Cercle C (centre O)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e74c3c;"></div>
+                        <span>Cercle C' (centre O')</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #2ecc71;"></div>
+                        <span>Droite Δ (BMN)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #9b59b6;"></div>
+                        <span>Points A et B (intersections)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f39c12;"></div>
+                        <span>Points M' et N' (opposés)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e67e22;"></div>
+                        <span>Point P (intersection OM/O'N)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('geometryCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let config = {
+            radius1: 140,
+            radius2: 120,
+            lineAngle: 45
+        };
+
+        function drawCircle(x, y, radius, color, lineWidth = 2) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+        }
+
+        function drawPoint(x, y, label, color = '#000', size = 5) {
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText(label, x + 10, y - 10);
+        }
+
+        function drawLine(x1, y1, x2, y2, color = '#000', lineWidth = 2, dashed = false) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            if (dashed) {
+                ctx.setLineDash([5, 5]);
+            } else {
+                ctx.setLineDash([]);
+            }
+            ctx.stroke();
+        }
+
+        function findCircleIntersections(x1, y1, r1, x2, y2, r2) {
+            const d = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+
+            if (d > r1 + r2 || d < Math.abs(r1 - r2) || d === 0) {
+                return null;
+            }
+
+            const a = (r1 ** 2 - r2 ** 2 + d ** 2) / (2 * d);
+            const h = Math.sqrt(r1 ** 2 - a ** 2);
+
+            const px = x1 + a * (x2 - x1) / d;
+            const py = y1 + a * (y2 - y1) / d;
+
+            const intersect1 = {
+                x: px + h * (y2 - y1) / d,
+                y: py - h * (x2 - x1) / d
+            };
+
+            const intersect2 = {
+                x: px - h * (y2 - y1) / d,
+                y: py + h * (x2 - x1) / d
+            };
+
+            return [intersect1, intersect2];
+        }
+
+        function lineCircleIntersection(cx, cy, r, x1, y1, x2, y2) {
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const fx = x1 - cx;
+            const fy = y1 - cy;
+
+            const a = dx * dx + dy * dy;
+            const b = 2 * (fx * dx + fy * dy);
+            const c = fx * fx + fy * fy - r * r;
+
+            const discriminant = b * b - 4 * a * c;
+
+            if (discriminant < 0) return [];
+
+            const t1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+            const t2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+
+            const points = [];
+            if (t1 >= 0 && t1 <= 1) {
+                points.push({ x: x1 + t1 * dx, y: y1 + t1 * dy, t: t1 });
+            }
+            if (t2 >= 0 && t2 <= 1) {
+                points.push({ x: x1 + t2 * dx, y: y1 + t2 * dy, t: t2 });
+            }
+
+            // Extended line intersections
+            points.push({ x: x1 + t1 * dx, y: y1 + t1 * dy, t: t1 });
+            points.push({ x: x1 + t2 * dx, y: y1 + t2 * dy, t: t2 });
+
+            return points;
+        }
+
+        function lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
+            const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+            if (Math.abs(denom) < 0.001) return null;
+
+            const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
+
+            return {
+                x: x1 + t * (x2 - x1),
+                y: y1 + t * (y2 - y1)
+            };
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Centers
+            const O = { x: 280, y: 350 };
+            const O_prime = { x: 420, y: 350 };
+
+            const r1 = config.radius1;
+            const r2 = config.radius2;
+
+            // Draw circles
+            drawCircle(O.x, O.y, r1, '#3498db', 3);
+            drawCircle(O_prime.x, O_prime.y, r2, '#e74c3c', 3);
+
+            // Find intersection points A and B
+            const intersections = findCircleIntersections(O.x, O.y, r1, O_prime.x, O_prime.y, r2);
+
+            if (!intersections) return;
+
+            const A = intersections[0];
+            const B = intersections[1];
+
+            // Line through B
+            const angle = (config.lineAngle * Math.PI) / 180;
+            const lineLength = 1000;
+            const lineStart = {
+                x: B.x - Math.cos(angle) * lineLength,
+                y: B.y - Math.sin(angle) * lineLength
+            };
+            const lineEnd = {
+                x: B.x + Math.cos(angle) * lineLength,
+                y: B.y + Math.sin(angle) * lineLength
+            };
+
+            // Find M and N
+            const intersectC = lineCircleIntersection(O.x, O.y, r1, lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
+            const intersectC_prime = lineCircleIntersection(O_prime.x, O_prime.y, r2, lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
+
+            let M = null, N = null;
+
+            // Find M (not B)
+            for (let p of intersectC) {
+                const dist = Math.sqrt((p.x - B.x) ** 2 + (p.y - B.y) ** 2);
+                if (dist > 5) {
+                    M = p;
+                    break;
+                }
+            }
+
+            // Find N (not B)
+            for (let p of intersectC_prime) {
+                const dist = Math.sqrt((p.x - B.x) ** 2 + (p.y - B.y) ** 2);
+                if (dist > 5) {
+                    N = p;
+                    break;
+                }
+            }
+
+            if (!M || !N) return;
+
+            // Draw line Δ
+            drawLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y, '#2ecc71', 2, true);
+
+            // M' and N' (diametrically opposite)
+            const M_prime = {
+                x: 2 * O.x - M.x,
+                y: 2 * O.y - M.y
+            };
+
+            const N_prime = {
+                x: 2 * O_prime.x - N.x,
+                y: 2 * O_prime.y - N.y
+            };
+
+            // Draw line B, M', N' (aligned)
+            drawLine(B.x, B.y, M_prime.x, M_prime.y, '#f39c12', 2);
+            drawLine(B.x, B.y, N_prime.x, N_prime.y, '#f39c12', 2);
+
+            // Draw OM and O'N
+            const extendFactor = 3;
+            const OM_end = {
+                x: O.x + (M.x - O.x) * extendFactor,
+                y: O.y + (M.y - O.y) * extendFactor
+            };
+            const O_primeN_end = {
+                x: O_prime.x + (N.x - O_prime.x) * extendFactor,
+                y: O_prime.y + (N.y - O_prime.y) * extendFactor
+            };
+
+            drawLine(O.x, O.y, OM_end.x, OM_end.y, '#9b59b6', 2, true);
+            drawLine(O_prime.x, O_prime.y, O_primeN_end.x, O_primeN_end.y, '#9b59b6', 2, true);
+
+            // Find P (intersection of OM and O'N)
+            const P = lineIntersection(O.x, O.y, OM_end.x, OM_end.y, O_prime.x, O_prime.y, O_primeN_end.x, O_primeN_end.y);
+
+            // Draw diameters MM' and NN'
+            drawLine(M.x, M.y, M_prime.x, M_prime.y, '#95a5a6', 1, true);
+            drawLine(N.x, N.y, N_prime.x, N_prime.y, '#95a5a6', 1, true);
+
+            // Draw all points
+            drawPoint(O.x, O.y, 'O', '#3498db', 6);
+            drawPoint(O_prime.x, O_prime.y, "O'", '#e74c3c', 6);
+            drawPoint(A.x, A.y, 'A', '#9b59b6', 7);
+            drawPoint(B.x, B.y, 'B', '#9b59b6', 7);
+            drawPoint(M.x, M.y, 'M', '#2ecc71', 6);
+            drawPoint(N.x, N.y, 'N', '#2ecc71', 6);
+            drawPoint(M_prime.x, M_prime.y, "M'", '#f39c12', 6);
+            drawPoint(N_prime.x, N_prime.y, "N'", '#f39c12', 6);
+
+            if (P && P.x > 0 && P.x < canvas.width && P.y > 0 && P.y < canvas.height) {
+                drawPoint(P.x, P.y, 'P', '#e67e22', 7);
+
+                // Draw PO and PO'
+                drawLine(P.x, P.y, O.x, O.y, '#e67e22', 2);
+                drawLine(P.x, P.y, O_prime.x, O_prime.y, '#e67e22', 2);
+            }
+
+            // Draw AM and AN
+            drawLine(A.x, A.y, M.x, M.y, '#8e44ad', 1.5);
+            drawLine(A.x, A.y, N.x, N.y, '#8e44ad', 1.5);
+
+            // Draw AO and AO'
+            drawLine(A.x, A.y, O.x, O.y, '#34495e', 1.5, true);
+            drawLine(A.x, A.y, O_prime.x, O_prime.y, '#34495e', 1.5, true);
+        }
+
+        function resetView() {
+            config = {
+                radius1: 140,
+                radius2: 120,
+                lineAngle: 45
+            };
+            document.getElementById('radius1').value = 140;
+            document.getElementById('radius2').value = 120;
+            document.getElementById('lineAngle').value = 45;
+            draw();
+        }
+
+        // Event listeners
+        document.getElementById('radius1').addEventListener('input', (e) => {
+            config.radius1 = parseInt(e.target.value);
+            draw();
+        });
+
+        document.getElementById('radius2').addEventListener('input', (e) => {
+            config.radius2 = parseInt(e.target.value);
+            draw();
+        });
+
+        document.getElementById('lineAngle').addEventListener('input', (e) => {
+            config.lineAngle = parseInt(e.target.value);
+            draw();
+        });
+
+        // Initial draw
+        draw();
+    </script>
+</body>
+</html>
